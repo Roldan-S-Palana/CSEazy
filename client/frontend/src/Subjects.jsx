@@ -142,10 +142,10 @@ export default function Subjects() {
     );
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Side Navigation */}
-      <div className="hidden md:block w-80 md:w-96 bg-white dark:bg-gray-800 h-full border-r border-gray-200 dark:border-gray-700">
-        <div className="py-2 h-full overflow-y-auto">
+    <div className="flex w-full h-full bg-gray-50 dark:bg-gray-900">
+      {/* Left Navigation - Subjects */}
+      <div className="fixed left-0 w-80 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+        <div className="p-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Subjects
           </h3>
@@ -154,24 +154,24 @@ export default function Subjects() {
               <button
                 key={subj._id}
                 onClick={() => setSelectedSubject(subj)}
-                className={`w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   selectedSubject && selectedSubject._id === subj._id
-                    ? 'bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500'
-                    : ''
+                    ? "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
+                    : ""
                 }`}
               >
-                <div className="font-medium flex items-center">
-                  {subj.name}
+                <div className="flex items-center">
                   {subj.icon && (
                     <img
                       src={subj.icon.replace("/server/icons/", "/icons/")}
                       alt="icon"
-                      className="w-6 h-6 ml-2"
+                      className="w-8 h-8 mr-3"
                     />
                   )}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {subj.description}
+                  <div>
+                    <span className="font-medium text-gray-900 dark:text-white block">{subj.name}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{subj.description}</span>
+                  </div>
                 </div>
               </button>
             ))}
@@ -180,32 +180,32 @@ export default function Subjects() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 overflow-y-auto">
         {/* Subject Title */}
         {selectedSubject && (
-          <div className="bg-white dark:bg-gray-800 py-3">
+          <div className="bg-white dark:bg-gray-800 py-4 px-6">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
               {selectedSubject.icon && (
                 <img
                   src={iconMap[selectedSubject.icon]}
                   alt="icon"
-                  className="w-8 h-8 md:hidden"
+                  className="w-8 h-8 mr-2"
                 />
               )}
-              <span className="hidden md:block">{selectedSubject.name}</span>
+              <span>{selectedSubject.name}</span>
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
+            <p className="text-gray-600 dark:text-gray-400 mt-2 text-center">
               {selectedSubject.description}
             </p>
           </div>
         )}
 
         {/* Roadmap */}
-        <div className="flex-1 py-2 overflow-y-auto">
+        <div className="p-6">
           {selectedSubject &&
           selectedSubject.topics &&
           selectedSubject.topics.length > 0 ? (
-            <div className="relative">
+            <div className="space-y-4">
               {selectedSubject.topics.map((topic, index) => {
                 const totalLessons = topic.lessons ? topic.lessons.length : 0;
                 const completedLessons = topic.lessons
@@ -219,60 +219,63 @@ export default function Subjects() {
                     : 0;
 
                 return (
-                  <div key={topic._id} className="flex items-center mb-8">
-                    {/* Connecting Line */}
-                    {index < selectedSubject.topics.length - 1 && (
-                      <div className="absolute left-6 top-12 w-0.5 h-16 bg-gray-300 dark:bg-gray-600"></div>
-                    )}
-
-                    {/* Topic Circle */}
-                    <div
-                      className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg"
-                      onClick={() => setSelectedTopic(topic)}
-                    >
-                      {index + 1}
-                    </div>
-
-                    {/* Topic Content */}
-                    <div className="ml-4 flex-1">
+                  <div key={topic._id}>
+                    <div className="flex items-center mb-4">
+                      {/* Topic Circle */}
                       <div
-                        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
+                        className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg"
                         onClick={() => setSelectedTopic(topic)}
                       >
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                          {topic.name}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-3">
-                          {topic.description}
-                        </p>
-                        <div className="mb-2">
-                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${progress}%` }}
-                            ></div>
-                          </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                            {completedLessons} of {totalLessons} lessons
-                            completed
+                        {index + 1}
+                      </div>
+
+                      {/* Topic Content */}
+                      <div className="ml-4 flex-1">
+                        <div
+                          className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
+                          onClick={() => setSelectedTopic(topic)}
+                        >
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            {topic.name}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 mb-3">
+                            {topic.description}
                           </p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
-                            onClick={() => setSelectedTopic(topic)}
-                          >
-                            View Details
-                          </button>
-                          <button
-                            className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
-                            onClick={() => setShowLessonForm(topic._id)}
-                          >
-                            Add Lesson
-                          </button>
+                          <div className="mb-2">
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${progress}%` }}
+                              ></div>
+                            </div>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                              {completedLessons} of {totalLessons} lessons
+                              completed
+                            </p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                              onClick={() => setSelectedTopic(topic)}
+                            >
+                              View Details
+                            </button>
+                            <button
+                              className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
+                              onClick={() => setShowLessonForm(topic._id)}
+                            >
+                              Add Lesson
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    {/* Arrow Connector */}
+                    {index < selectedSubject.topics.length - 1 && (
+                      <div className="text-center text-3xl text-gray-400 dark:text-gray-500 mb-4">
+                        ↓
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -287,10 +290,10 @@ export default function Subjects() {
         </div>
       </div>
 
-      {/* Topic Details Panel */}
+      {/* Right Panel - Topic Details */}
       {selectedTopic && (
-        <div className="hidden md:block w-80 md:w-96 bg-white dark:bg-gray-800 overflow-y-auto">
-          <div className="py-4">
+        <div className="w-80 h-full fixed right-0 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+          <div className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                 {selectedTopic.name}
