@@ -31,6 +31,9 @@ export default function Subjects() {
   const [quizAnswer, setQuizAnswer] = useState("");
   const [expandedLessons, setExpandedLessons] = useState(new Set());
   const [lessonImage, setLessonImage] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [expandedMobileTopics, setExpandedMobileTopics] = useState(new Set());
 
   useEffect(() => {
     fetch("http://localhost:5000/api/subjects")
@@ -42,6 +45,15 @@ export default function Subjects() {
         }
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleAddLesson = async (e, topicId) => {
@@ -95,9 +107,13 @@ export default function Subjects() {
         setSubjects(data);
         // Update selectedTopic with new data
         if (selectedTopic) {
-          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          const updatedSubject = data.find(
+            (s) => s._id === selectedSubject._id
+          );
           if (updatedSubject) {
-            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            const updatedTopic = updatedSubject.topics.find(
+              (t) => t._id === selectedTopic._id
+            );
             setSelectedTopic(updatedTopic);
           }
         }
@@ -140,17 +156,25 @@ export default function Subjects() {
         setSubjects(data);
         // Update selectedTopic with new data
         if (selectedTopic) {
-          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          const updatedSubject = data.find(
+            (s) => s._id === selectedSubject._id
+          );
           if (updatedSubject) {
-            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            const updatedTopic = updatedSubject.topics.find(
+              (t) => t._id === selectedTopic._id
+            );
             setSelectedTopic(updatedTopic);
           }
         }
         // Update selectedTopic with new data
         if (selectedTopic) {
-          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          const updatedSubject = data.find(
+            (s) => s._id === selectedSubject._id
+          );
           if (updatedSubject) {
-            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            const updatedTopic = updatedSubject.topics.find(
+              (t) => t._id === selectedTopic._id
+            );
             setSelectedTopic(updatedTopic);
           }
         }
@@ -167,8 +191,20 @@ export default function Subjects() {
 
   return (
     <div className="flex w-full h-full bg-gray-50 dark:bg-gray-900">
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        ></div>
+      )}
+
       {/* Left Navigation - Subjects */}
-      <div className="fixed left-0 w-80 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+      <div
+        className={`fixed left-0 w-80 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 ${
+          isMobileMenuOpen ? "block" : "hidden"
+        } md:block z-[60]`}
+      >
         <div className="p-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Subjects
@@ -177,7 +213,10 @@ export default function Subjects() {
             {subjects.map((subj) => (
               <button
                 key={subj._id}
-                onClick={() => setSelectedSubject(subj)}
+                onClick={() => {
+                  setSelectedSubject(subj);
+                  setIsMobileMenuOpen(false);
+                }}
                 className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   selectedSubject && selectedSubject._id === subj._id
                     ? "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
@@ -193,8 +232,12 @@ export default function Subjects() {
                     />
                   )}
                   <div>
-                    <span className="font-medium text-gray-900 dark:text-white block">{subj.name}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{subj.description}</span>
+                    <span className="font-medium text-gray-900 dark:text-white block">
+                      {subj.name}
+                    </span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {subj.description}
+                    </span>
                   </div>
                 </div>
               </button>
@@ -208,19 +251,28 @@ export default function Subjects() {
         {/* Subject Title */}
         {selectedSubject && (
           <div className="bg-white dark:bg-gray-800 py-4 px-6">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
               {selectedSubject.icon && (
                 <img
-                      src={selectedSubject.icon.replace("/server/icons/", "/icons/")}
-                      alt="icon"
-                      className="w-8 h-8 mr-3"
-                    />
+                  src={selectedSubject.icon.replace(
+                    "/server/icons/",
+                    "/icons/"
+                  )}
+                  alt="icon"
+                  className="w-8 h-8 mr-3"
+                />
               )}
               <span>{selectedSubject.name}</span>
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2 text-center">
               {selectedSubject.description}
             </p>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden fixed top-24 left-4 z-50 text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-2 rounded shadow"
+            >
+              ☰
+            </button>
           </div>
         )}
 
@@ -229,7 +281,32 @@ export default function Subjects() {
           {selectedSubject &&
           selectedSubject.topics &&
           selectedSubject.topics.length > 0 ? (
-            <div className="space-y-4">
+            <div
+              className="relative bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4 z-10"
+              style={{ height: `${selectedSubject.topics.length * 200}px` }}
+            >
+              <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                {selectedSubject.topics.slice(0, -1).map((_, index) => {
+                  const isLeft = index % 2 === 0;
+                  const nextIsLeft = (index + 1) % 2 === 0;
+                  const x1 = isLeft ? "25%" : "75%";
+                  const y1 = `${index * 200 + 100}px`;
+                  const x2 = nextIsLeft ? "25%" : "75%";
+                  const y2 = `${(index + 1) * 200 + 100}px`;
+                  return (
+                    <line
+                      key={index}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke="#6b7280"
+                      strokeWidth="2"
+                      className="marching-ants"
+                    />
+                  );
+                })}
+              </svg>
               {selectedSubject.topics.map((topic, index) => {
                 const totalLessons = topic.lessons ? topic.lessons.length : 0;
                 const completedLessons = topic.lessons
@@ -242,64 +319,102 @@ export default function Subjects() {
                     ? (completedLessons / totalLessons) * 100
                     : 0;
 
+                const isLeft = index % 2 === 0;
+                const topPosition = `${index * 200}px`;
+
                 return (
-                  <div key={topic._id}>
-                    <div className="flex items-center mb-4">
-                      {/* Topic Circle */}
-                      <div
-                        className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg"
-                        onClick={() => setSelectedTopic(topic)}
+                  <div
+                    key={topic._id}
+                    className={`absolute flex items-center ${
+                      isLeft ? "roadmap-node-left" : "roadmap-node-right"
+                    }`}
+                    style={{ top: topPosition, width: "30%" }}
+                  >
+                    {/* Topic Circle */}
+                    <div
+                      className="w-17 h-18 md:w-21 md:h-22 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg"
+                      style={{
+                        background:
+                          "radial-gradient(circle at 50% 40%, #5E8CC2 60%, #265994 61%)",
+                        boxShadow: "0 20px 20px -10px rgba(0, 0, 0, 0.5)",
+                        textShadow:
+                          "1px 1px 2px rgba(0,0,0,0.7), -1px -1px 2px rgba(255,255,255,0.3)",
+                        perspective: "200px",
+                      }}
+                      onClick={() => {
+                        if (isMobile) {
+                          const newExpanded = new Set(expandedMobileTopics);
+                          if (newExpanded.has(topic._id)) {
+                            newExpanded.delete(topic._id);
+                          } else {
+                            newExpanded.add(topic._id);
+                          }
+                          setExpandedMobileTopics(newExpanded);
+                        } else {
+                          setSelectedTopic(topic);
+                        }
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "2.5rem",
+                          transform: "rotateX(30deg) translateY(-10px)", // 👈 milder tilt
+                          transformOrigin: "center bottom", // tilt from bottom edge
+                          display: "inline-block",
+                        }}
                       >
                         {index + 1}
-                      </div>
+                      </span>
+                    </div>
 
-                      {/* Topic Content */}
-                      <div className="ml-4 flex-1">
-                        <div
-                          className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
-                          onClick={() => setSelectedTopic(topic)}
-                        >
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                            {topic.name}
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-400 mb-3">
-                            {topic.description}
+                    {/* Topic Content */}
+                    <div
+                      className={`ml-4 flex-1 ${
+                        isLeft ? "" : "order-first mr-4 ml-0"
+                      } ${
+                        isMobile && !expandedMobileTopics.has(topic._id)
+                          ? "hidden"
+                          : ""
+                      }`}
+                    >
+                      <div
+                        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
+                        onClick={() => setSelectedTopic(topic)}
+                      >
+                        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                          {topic.name}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400 mb-3">
+                          {topic.description}
+                        </p>
+                        <div className="mb-2">
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div
+                              className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            {completedLessons} of {totalLessons} lessons
+                            completed
                           </p>
-                          <div className="mb-2">
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div
-                                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${progress}%` }}
-                              ></div>
-                            </div>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                              {completedLessons} of {totalLessons} lessons
-                              completed
-                            </p>
-                          </div>
-                          <div className="flex space-x-2">
-                            <button
-                              className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
-                              onClick={() => setSelectedTopic(topic)}
-                            >
-                              View Details
-                            </button>
-                            <button
-                              className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
-                              onClick={() => setShowLessonForm(topic._id)}
-                            >
-                              Add Lesson
-                            </button>
-                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                            onClick={() => setSelectedTopic(topic)}
+                          >
+                            View Details
+                          </button>
+                          <button
+                            className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
+                            onClick={() => setShowLessonForm(topic._id)}
+                          >
+                            Add Lesson
+                          </button>
                         </div>
                       </div>
                     </div>
-                    {/* Arrow Connector */}
-                    {index < selectedSubject.topics.length - 1 && (
-                      <div className="text-center text-3xl text-gray-400 dark:text-gray-500 mb-4">
-                        ↓
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -316,10 +431,10 @@ export default function Subjects() {
 
       {/* Right Panel - Topic Details */}
       {selectedTopic && (
-        <div className="w-80 h-full fixed right-0 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <div className="w-80 h-full fixed right-0 z-99  bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                 {selectedTopic.name}
               </h2>
               <button
@@ -334,7 +449,7 @@ export default function Subjects() {
             </p>
 
             {/* Lessons */}
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3">
               Lessons
             </h3>
             {selectedTopic.lessons && selectedTopic.lessons.length > 0 ? (
@@ -406,7 +521,7 @@ export default function Subjects() {
             {/* Add Lesson Form */}
             {showLessonForm === selectedTopic._id && (
               <div className="mt-4">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3">
                   Add New Lesson
                 </h4>
                 <form
@@ -457,7 +572,7 @@ export default function Subjects() {
             {/* Add Quiz Form */}
             {showQuizForm && (
               <div className="mt-4">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-3">
                   Add New Question
                 </h4>
                 <form

@@ -39,3 +39,26 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Marching ants animation */
+@keyframes marching-ants {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -20;
+  }
+}
+
+.marching-ants {
+  stroke-dasharray: 5, 5;
+  animation: marching-ants 0.5s linear infinite;
+}
+
+.roadmap-node-left {
+  left: 10%;
+}
+
+.roadmap-node-right {
+  left: 60%;
+}
