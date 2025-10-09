@@ -93,6 +93,14 @@ export default function Subjects() {
         const res = await fetch("http://localhost:5000/api/subjects");
         const data = await res.json();
         setSubjects(data);
+        // Update selectedTopic with new data
+        if (selectedTopic) {
+          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          if (updatedSubject) {
+            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            setSelectedTopic(updatedTopic);
+          }
+        }
       }
     } catch (error) {
       console.error("Error deleting lesson:", error);
@@ -130,6 +138,22 @@ export default function Subjects() {
         const res = await fetch("http://localhost:5000/api/subjects");
         const data = await res.json();
         setSubjects(data);
+        // Update selectedTopic with new data
+        if (selectedTopic) {
+          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          if (updatedSubject) {
+            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            setSelectedTopic(updatedTopic);
+          }
+        }
+        // Update selectedTopic with new data
+        if (selectedTopic) {
+          const updatedSubject = data.find(s => s._id === selectedSubject._id);
+          if (updatedSubject) {
+            const updatedTopic = updatedSubject.topics.find(t => t._id === selectedTopic._id);
+            setSelectedTopic(updatedTopic);
+          }
+        }
       }
     } catch (error) {
       console.error("Error adding quiz:", error);
@@ -187,10 +211,10 @@ export default function Subjects() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
               {selectedSubject.icon && (
                 <img
-                  src={iconMap[selectedSubject.icon]}
-                  alt="icon"
-                  className="w-8 h-8 mr-2"
-                />
+                      src={selectedSubject.icon.replace("/server/icons/", "/icons/")}
+                      alt="icon"
+                      className="w-8 h-8 mr-3"
+                    />
               )}
               <span>{selectedSubject.name}</span>
             </h1>

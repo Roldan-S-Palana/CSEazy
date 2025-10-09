@@ -17,7 +17,7 @@ function App() {
   }, [dark]);
 
   return (
-    <div className="min-h-screen w-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <div className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       {/* Top Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-10 flex justify-between items-center px-6 h-16 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700">
         <h1 className="text-xl font-bold">Nutty Pad</h1>
