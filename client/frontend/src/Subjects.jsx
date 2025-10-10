@@ -231,7 +231,7 @@ export default function Subjects() {
 
       {/* Left Navigation - Subjects */}
       <div
-        className={`fixed left-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+        className={`fixed left-0 h-full bg-theme-100 dark:bg-theme-900 border-r border-gray-200 dark:border-gray-700 
              ${
                isMobile ? (isMobileMenuOpen ? "block" : "hidden") : "block"
              } z-[60]`}
@@ -256,8 +256,8 @@ export default function Subjects() {
                 } rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   selectedSubject && selectedSubject._id === subj._id
                     ? isTablet
-                      ? "bg-blue-100 dark:bg-blue-900"
-                      : "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
+                      ? "bg-theme-100 dark:bg-theme-900"
+                      : "bg-theme-100 dark:bg-theme-900 border-l-4 border-theme-500"
                     : ""
                 }`}
               >
@@ -300,7 +300,7 @@ export default function Subjects() {
       <div className="flex-1 overflow-y-auto">
         {/* Subject Title */}
         {selectedSubject && (
-          <div className="bg-white dark:bg-gray-800 py-4 px-6">
+          <div className="bg-theme-100 dark:bg-theme-900 py-4 px-6">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center">
               {selectedSubject.icon && (
                 <img
@@ -375,7 +375,7 @@ export default function Subjects() {
                           className="w-17 h-18 md:w-21 md:h-22 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg"
                           style={{
                             background:
-                              "radial-gradient(circle at 50% 40%, #5E8CC2 60%, #265994 61%)",
+                              "radial-gradient(circle at 50% 40%, var(--color-theme-500) 60%, var(--color-theme-900) 61%)",
                             boxShadow: "0 20px 20px -10px rgba(0, 0, 0, 0.5)",
                             textShadow:
                               "1px 1px 2px rgba(0,0,0,0.7), -1px -1px 2px rgba(255,255,255,0.3)",
@@ -418,7 +418,7 @@ export default function Subjects() {
                             }}
                           >
                             <div
-                              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm w-full mx-4 max-h-96 overflow-y-auto"
+                              className="bg-theme-100 dark:bg-theme-900 p-4 rounded-lg shadow-lg max-w-sm w-full mx-4 max-h-96 overflow-y-auto"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div className="flex justify-between items-center mb-4">
@@ -444,7 +444,7 @@ export default function Subjects() {
                               <div className="mb-2">
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                   <div
-                                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                                    className="bg-gradient-to-r from-theme-500 to-theme-900 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${progress}%` }}
                                   ></div>
                                 </div>
@@ -455,7 +455,7 @@ export default function Subjects() {
                               </div>
                               <div className="flex space-x-2">
                                 <button
-                                  className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  className="px-3 py-1 bg-gradient-to-r from-theme-500 to-theme-500 text-white rounded-lg hover:from-theme-500 hover:to-theme-500 transition-all duration-300 hover:scale-105 shadow-md"
                                   onClick={() => setSelectedTopic(topic)}
                                 >
                                   View Details
@@ -480,7 +480,7 @@ export default function Subjects() {
                             } transition-all duration-300`}
                           >
                             <div
-                              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
+                              className="bg-theme-100 dark:bg-theme-900 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
                               onClick={() => setSelectedTopic(topic)}
                             >
                               <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -492,7 +492,7 @@ export default function Subjects() {
                               <div className="mb-2">
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                                   <div
-                                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                                    className="bg-gradient-to-r from-theme-500 to-theme-900 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${progress}%` }}
                                   ></div>
                                 </div>
@@ -503,7 +503,7 @@ export default function Subjects() {
                               </div>
                               <div className="flex space-x-2">
                                 <button
-                                  className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  className="px-3 py-1 bg-gradient-to-r from-theme-500 to-theme-500 text-white rounded-lg hover:from-theme-500 hover:to-theme-500 transition-all duration-300 hover:scale-105 shadow-md"
                                   onClick={() => setSelectedTopic(topic)}
                                 >
                                   View Details
@@ -536,7 +536,7 @@ export default function Subjects() {
 
       {/* Right Panel - Topic Details */}
       {selectedTopic && (
-        <div className="w-80 h-full fixed right-0 z-99  bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <div className="w-80 h-full fixed right-0 z-99  bg-theme-100 dark:bg-theme-900 border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
@@ -580,7 +580,7 @@ export default function Subjects() {
                             }
                             setExpandedLessons(newExpanded);
                           }}
-                          className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="text-theme-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           {isExpanded ? "Hide" : "View"}
                         </button>
@@ -638,14 +638,14 @@ export default function Subjects() {
                     placeholder="Lesson Title"
                     value={lessonTitle}
                     onChange={(e) => setLessonTitle(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                     required
                   />
                   <textarea
                     placeholder="Lesson Content"
                     value={lessonContent}
                     onChange={(e) => setLessonContent(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                     rows="4"
                     required
                   />
@@ -653,7 +653,7 @@ export default function Subjects() {
                     type="file"
                     accept="image/*"
                     onChange={(e) => setLessonImage(e.target.files[0])}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                   />
                   <div className="flex space-x-2">
                     <button
@@ -687,7 +687,7 @@ export default function Subjects() {
                   <select
                     value={quizType}
                     onChange={(e) => setQuizType(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                   >
                     <option value="mcq">Multiple Choice</option>
                     <option value="truefalse">True/False</option>
@@ -698,7 +698,7 @@ export default function Subjects() {
                     placeholder="Question"
                     value={quizQuestion}
                     onChange={(e) => setQuizQuestion(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                     required
                   />
                   {quizType === "mcq" && (
@@ -714,7 +714,7 @@ export default function Subjects() {
                             newOpts[idx] = e.target.value;
                             setQuizOptions(newOpts);
                           }}
-                          className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                          className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                           required
                         />
                       ))}
@@ -725,7 +725,7 @@ export default function Subjects() {
                     placeholder="Answer"
                     value={quizAnswer}
                     onChange={(e) => setQuizAnswer(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
                     required
                   />
                   <div className="flex space-x-2">
@@ -752,14 +752,14 @@ export default function Subjects() {
 
       {/* Bottom Navigation for Mobile */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-theme-100 dark:bg-theme-900 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 z-50">
           {subjects.map((subj) => (
             <button
               key={subj._id}
               onClick={() => setSelectedSubject(subj)}
               className={`p-2 rounded-lg transition-all duration-300 ${
                 selectedSubject && selectedSubject._id === subj._id
-                  ? "bg-blue-100 dark:bg-blue-900"
+                  ? "bg-theme-100 dark:bg-theme-900"
                   : "hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
