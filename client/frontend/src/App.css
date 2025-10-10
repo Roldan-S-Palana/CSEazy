@@ -62,3 +62,26 @@
 .roadmap-node-right {
   left: 60%;
 }
+
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Optional: smooth body transition */
+body {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Optional scrollbar style for dark/light mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
