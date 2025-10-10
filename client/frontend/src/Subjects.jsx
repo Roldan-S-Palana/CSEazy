@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import balanceIcon from "/icons/balance.png";
 import calculationIcon from "/icons/calculation.png";
@@ -33,6 +33,7 @@ export default function Subjects() {
   const [lessonImage, setLessonImage] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const [expandedMobileTopics, setExpandedMobileTopics] = useState(new Set());
 
   useEffect(() => {
@@ -48,13 +49,29 @@ export default function Subjects() {
   }, []);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkScreen = () => {
+      const width = window.innerWidth;
+
+      if (width < 768) {
+        setIsMobile(true);
+        setIsTablet(false);
+      } else if (width >= 768 && width <= 1280) {
+        setIsMobile(false);
+        setIsTablet(true);
+      } else {
+        setIsMobile(false);
+        setIsTablet(false);
+      }
+
+      console.log("checkScreen triggered:", width);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
   }, []);
+
+   
 
   const handleAddLesson = async (e, topicId) => {
     e.preventDefault();
@@ -184,32 +201,49 @@ export default function Subjects() {
     }
   };
 
+  useEffect(() => {
+    console.log(
+      "isMobile:",
+      isMobile,
+      "isTablet:",
+      isTablet,
+      "width:",
+      window.innerWidth
+    );
+  }, [isMobile, isTablet]);
+
+
   if (loading)
     return (
       <div className="text-center mt-10 animate-pulse">Loading subjects...</div>
     );
 
+ 
   return (
     <div className="flex w-full h-full bg-gray-50 dark:bg-gray-900">
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-40"
+          className="fixed inset-0 md:hidden z-40"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
 
       {/* Left Navigation - Subjects */}
       <div
-        className={`fixed left-0 w-80 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 ${
-          isMobileMenuOpen ? "block" : "hidden"
-        } md:block z-[60]`}
+        className={`fixed left-0 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+             ${
+               isMobile ? (isMobileMenuOpen ? "block" : "hidden") : "block"
+             } z-[60]`}
+        style={{ width: isTablet ? "80px" : "320px" }}
       >
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Subjects
-          </h3>
-          <div className="space-y-2">
+          {!isTablet && (
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Subjects
+            </h3>
+          )}
+          <div className={isTablet ? "space-y-1" : "space-y-2"}>
             {subjects.map((subj) => (
               <button
                 key={subj._id}
@@ -217,29 +251,45 @@ export default function Subjects() {
                   setSelectedSubject(subj);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                className={`w-full ${
+                  isTablet ? "py-2" : "text-left px-4 py-3"
+                } rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   selectedSubject && selectedSubject._id === subj._id
-                    ? "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
+                    ? isTablet
+                      ? "bg-blue-100 dark:bg-blue-900"
+                      : "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
                     : ""
                 }`}
               >
-                <div className="flex items-center">
-                  {subj.icon && (
-                    <img
-                      src={subj.icon.replace("/server/icons/", "/icons/")}
-                      alt="icon"
-                      className="w-8 h-8 mr-3"
-                    />
-                  )}
-                  <div>
-                    <span className="font-medium text-gray-900 dark:text-white block">
-                      {subj.name}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {subj.description}
-                    </span>
+                {isTablet ? (
+                  <div className="flex justify-center">
+                    {subj.icon && (
+                      <img
+                        src={subj.icon.replace("/server/icons/", "/icons/")}
+                        alt="icon"
+                        className="w-9 h-10"
+                      />
+                    )}
                   </div>
-                </div>
+                ) : (
+                  <div className="flex items-center">
+                    {subj.icon && (
+                      <img
+                        src={subj.icon.replace("/server/icons/", "/icons/")}
+                        alt="icon"
+                        className="w-8 h-8 mr-3"
+                      />
+                    )}
+                    <div>
+                      <span className="font-medium text-gray-900 dark:text-white block">
+                        {subj.name}
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {subj.description}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </button>
             ))}
           </div>
@@ -267,12 +317,6 @@ export default function Subjects() {
             <p className="text-gray-600 dark:text-gray-400 mt-2 text-center">
               {selectedSubject.description}
             </p>
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden fixed top-24 left-4 z-50 text-gray-900 dark:text-white bg-white dark:bg-gray-800 p-2 rounded shadow"
-            >
-              ☰
-            </button>
           </div>
         )}
 
@@ -281,144 +325,205 @@ export default function Subjects() {
           {selectedSubject &&
           selectedSubject.topics &&
           selectedSubject.topics.length > 0 ? (
-            <div
-              className="relative bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4 z-10"
-              style={{ height: `${selectedSubject.topics.length * 200}px` }}
-            >
-              <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                {selectedSubject.topics.slice(0, -1).map((_, index) => {
-                  const isLeft = index % 2 === 0;
-                  const nextIsLeft = (index + 1) % 2 === 0;
-                  const x1 = isLeft ? "25%" : "75%";
-                  const y1 = `${index * 200 + 100}px`;
-                  const x2 = nextIsLeft ? "25%" : "75%";
-                  const y2 = `${(index + 1) * 200 + 100}px`;
-                  return (
-                    <line
-                      key={index}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke="#6b7280"
-                      strokeWidth="2"
-                      className="marching-ants"
-                    />
-                  );
-                })}
-              </svg>
-              {selectedSubject.topics.map((topic, index) => {
-                const totalLessons = topic.lessons ? topic.lessons.length : 0;
-                const completedLessons = topic.lessons
-                  ? topic.lessons.filter(
-                      (lesson) => lesson.quizzes && lesson.quizzes.length > 0
-                    ).length
-                  : 0;
-                const progress =
-                  totalLessons > 0
-                    ? (completedLessons / totalLessons) * 100
-                    : 0;
+            (() => {
+              const spacing = isMobile ? 150 : 200;
+              return (
+                <div
+                  className="relative bg-transparent rounded-lg p-4 z-10"
+                  style={{
+                    height: `${selectedSubject.topics.length * spacing}px`,
+                  }}
+                >
+                  {selectedSubject.topics.map((topic, index) => {
+                    const totalLessons = topic.lessons
+                      ? topic.lessons.length
+                      : 0;
+                    const completedLessons = topic.lessons
+                      ? topic.lessons.filter(
+                          (lesson) =>
+                            lesson.quizzes && lesson.quizzes.length > 0
+                        ).length
+                      : 0;
+                    const progress =
+                      totalLessons > 0
+                        ? (completedLessons / totalLessons) * 100
+                        : 0;
 
-                const isLeft = index % 2 === 0;
-                const topPosition = `${index * 200}px`;
+                    const isLeft = index % 2 === 0;
+                    const topPosition = `${index * spacing}px`;
+                    const offset = isMobile ? 0 : 5;
+                    const leftPosition = isLeft
+                      ? `${25 - offset}%`
+                      : `${45 + offset}%`;
 
-                return (
-                  <div
-                    key={topic._id}
-                    className={`absolute flex items-center ${
-                      isLeft ? "roadmap-node-left" : "roadmap-node-right"
-                    }`}
-                    style={{ top: topPosition, width: "30%" }}
-                  >
-                    {/* Topic Circle */}
-                    <div
-                      className="w-17 h-18 md:w-21 md:h-22 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg"
-                      style={{
-                        background:
-                          "radial-gradient(circle at 50% 40%, #5E8CC2 60%, #265994 61%)",
-                        boxShadow: "0 20px 20px -10px rgba(0, 0, 0, 0.5)",
-                        textShadow:
-                          "1px 1px 2px rgba(0,0,0,0.7), -1px -1px 2px rgba(255,255,255,0.3)",
-                        perspective: "200px",
-                      }}
-                      onClick={() => {
-                        if (isMobile) {
-                          const newExpanded = new Set(expandedMobileTopics);
-                          if (newExpanded.has(topic._id)) {
-                            newExpanded.delete(topic._id);
-                          } else {
-                            newExpanded.add(topic._id);
-                          }
-                          setExpandedMobileTopics(newExpanded);
-                        } else {
-                          setSelectedTopic(topic);
-                        }
-                      }}
-                    >
-                      <span
+                    return (
+                      <div
+                        key={topic._id}
+                        className={`absolute ${
+                          isMobile || isTablet
+                            ? "flex flex-col items-center"
+                            : "flex items-center"
+                        }`}
                         style={{
-                          fontSize: "2.5rem",
-                          transform: "rotateX(30deg) translateY(-10px)", // 👈 milder tilt
-                          transformOrigin: "center bottom", // tilt from bottom edge
-                          display: "inline-block",
+                          top: topPosition,
+                          left: leftPosition,
+                          width: "30%",
                         }}
                       >
-                        {index + 1}
-                      </span>
-                    </div>
+                        {/* Topic Circle */}
+                        <div
+                          className="w-17 h-18 md:w-21 md:h-22 rounded-full flex items-center justify-center text-white font-bold text-lg md:text-xl cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg"
+                          style={{
+                            background:
+                              "radial-gradient(circle at 50% 40%, #5E8CC2 60%, #265994 61%)",
+                            boxShadow: "0 20px 20px -10px rgba(0, 0, 0, 0.5)",
+                            textShadow:
+                              "1px 1px 2px rgba(0,0,0,0.7), -1px -1px 2px rgba(255,255,255,0.3)",
+                            perspective: "200px",
+                          }}
+                          onClick={() => {
+                            if (isMobile || isTablet) {
+                              const newExpanded = new Set(expandedMobileTopics);
+                              if (newExpanded.has(topic._id)) {
+                                newExpanded.delete(topic._id);
+                              } else {
+                                newExpanded.add(topic._id);
+                              }
+                              setExpandedMobileTopics(newExpanded);
+                            } else {
+                              setSelectedTopic(topic);
+                            }
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "2.5rem",
+                              transform: "rotateX(30deg) translateY(-10px)", // 👈 milder tilt
+                              transformOrigin: "center bottom", // tilt from bottom edge
+                              display: "inline-block",
+                            }}
+                          >
+                            {index + 1}
+                          </span>
+                        </div>
 
-                    {/* Topic Content */}
-                    <div
-                      className={`ml-4 flex-1 ${
-                        isLeft ? "" : "order-first mr-4 ml-0"
-                      } ${
-                        isMobile && !expandedMobileTopics.has(topic._id)
-                          ? "hidden"
-                          : ""
-                      }`}
-                    >
-                      <div
-                        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
-                        onClick={() => setSelectedTopic(topic)}
-                      >
-                        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                          {topic.name}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-3">
-                          {topic.description}
-                        </p>
-                        <div className="mb-2">
-                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        {/* Topic Content */}
+                        {(isMobile || isTablet) && expandedMobileTopics.has(topic._id) ? (
+                          <div
+                            className="fixed inset-0 z-50 flex items-center justify-center"
+                            onClick={() => {
+                              const newExpanded = new Set(expandedMobileTopics);
+                              newExpanded.delete(topic._id);
+                              setExpandedMobileTopics(newExpanded);
+                            }}
+                          >
                             <div
-                              className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${progress}%` }}
-                            ></div>
+                              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg max-w-sm w-full mx-4 max-h-96 overflow-y-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                  {topic.name}
+                                </h3>
+                                <button
+                                  onClick={() => {
+                                    const newExpanded = new Set(
+                                      expandedMobileTopics
+                                    );
+                                    newExpanded.delete(topic._id);
+                                    setExpandedMobileTopics(newExpanded);
+                                  }}
+                                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                              <p className="text-gray-600 dark:text-gray-400 mb-3">
+                                {topic.description}
+                              </p>
+                              <div className="mb-2">
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                  <div
+                                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${progress}%` }}
+                                  ></div>
+                                </div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                  {completedLessons} of {totalLessons} lessons
+                                  completed
+                                </p>
+                              </div>
+                              <div className="flex space-x-2">
+                                <button
+                                  className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  onClick={() => setSelectedTopic(topic)}
+                                >
+                                  View Details
+                                </button>
+                                <button
+                                  className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  onClick={() => setShowLessonForm(topic._id)}
+                                >
+                                  Add Lesson
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                            {completedLessons} of {totalLessons} lessons
-                            completed
-                          </p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
-                            onClick={() => setSelectedTopic(topic)}
+                        ) : (
+                          <div
+                            className={`${
+                              isMobile || isTablet
+                                ? "mt-4 w-full opacity-0 max-h-0 overflow-hidden"
+                                : `ml-4 flex-1 ${
+                                    isLeft ? "" : "order-first mr-4 ml-0"
+                                  }`
+                            } transition-all duration-300`}
                           >
-                            View Details
-                          </button>
-                          <button
-                            className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
-                            onClick={() => setShowLessonForm(topic._id)}
-                          >
-                            Add Lesson
-                          </button>
-                        </div>
+                            <div
+                              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-lg transition-all duration-300"
+                              onClick={() => setSelectedTopic(topic)}
+                            >
+                              <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                {topic.name}
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 mb-3">
+                                {topic.description}
+                              </p>
+                              <div className="mb-2">
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                  <div
+                                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${progress}%` }}
+                                  ></div>
+                                </div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                  {completedLessons} of {totalLessons} lessons
+                                  completed
+                                </p>
+                              </div>
+                              <div className="flex space-x-2">
+                                <button
+                                  className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  onClick={() => setSelectedTopic(topic)}
+                                >
+                                  View Details
+                                </button>
+                                <button
+                                  className="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-md"
+                                  onClick={() => setShowLessonForm(topic._id)}
+                                >
+                                  Add Lesson
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                    );
+                  })}
+                </div>
+              );
+            })()
           ) : (
             <div className="text-center text-gray-500 dark:text-gray-400">
               {selectedSubject
@@ -642,6 +747,29 @@ export default function Subjects() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Bottom Navigation for Mobile */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 z-50">
+          {subjects.map((subj) => (
+            <button
+              key={subj._id}
+              onClick={() => setSelectedSubject(subj)}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                selectedSubject && selectedSubject._id === subj._id
+                  ? "bg-blue-100 dark:bg-blue-900"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+            >
+              <img
+                src={subj.icon.replace("/server/icons/", "/icons/")}
+                alt={subj.name}
+                className="w-8 h-8"
+              />
+            </button>
+          ))}
         </div>
       )}
     </div>
