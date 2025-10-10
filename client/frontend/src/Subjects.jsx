@@ -35,6 +35,8 @@ export default function Subjects() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   const [expandedMobileTopics, setExpandedMobileTopics] = useState(new Set());
+  const [fullscreenLesson, setFullscreenLesson] = useState(null);
+  const [fullscreenQuiz, setFullscreenQuiz] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/subjects")
@@ -571,18 +573,10 @@ export default function Subjects() {
                           {lesson.title}
                         </span>
                         <button
-                          onClick={() => {
-                            const newExpanded = new Set(expandedLessons);
-                            if (isExpanded) {
-                              newExpanded.delete(lesson._id);
-                            } else {
-                              newExpanded.add(lesson._id);
-                            }
-                            setExpandedLessons(newExpanded);
-                          }}
-                          className="text-theme-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                          onClick={() => setFullscreenLesson(lesson)}
+                          className="text-theme-500 hover:text-theme-700 dark:text-theme-400 dark:hover:text-theme-300"
                         >
-                          {isExpanded ? "Hide" : "View"}
+                          Fullscreen
                         </button>
                       </div>
                       {isExpanded && (
@@ -770,6 +764,114 @@ export default function Subjects() {
               />
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Fullscreen Lesson Modal */}
+      {fullscreenLesson && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-4xl w-full max-h-full overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{fullscreenLesson.title}</h2>
+                <button
+                  onClick={() => setFullscreenLesson(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="prose dark:prose-invert max-w-none">
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{fullscreenLesson.content}</p>
+                {fullscreenLesson.image && (
+                  <img
+                    src={`http://localhost:5000${fullscreenLesson.image}`}
+                    alt="Lesson"
+                    className="w-full max-h-96 object-contain mt-4 rounded"
+                  />
+                )}
+              </div>
+              {fullscreenLesson.quizzes && fullscreenLesson.quizzes.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Quiz</h3>
+                  <button
+                    onClick={() => setFullscreenQuiz(fullscreenLesson.quizzes[0])} // Assuming one quiz per lesson
+                    className="px-4 py-2 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
+                  >
+                    Take Quiz
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Quiz Modal */}
+      {fullscreenQuiz && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-2xl w-full max-h-full overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quiz</h2>
+                <button
+                  onClick={() => setFullscreenQuiz(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="space-y-4">
+                {fullscreenQuiz.questions && fullscreenQuiz.questions.map((question, index) => (
+                  <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{question.question}</h3>
+                    {question.type === 'mcq' && question.options && (
+                      <div className="space-y-2">
+                        {question.options.map((option, optIndex) => (
+                          <div key={optIndex} className="flex items-center">
+                            <input
+                              type="radio"
+                              name={`question-${index}`}
+                              value={option}
+                              className="mr-2"
+                            />
+                            <label className="text-gray-700 dark:text-gray-300">{option}</label>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {question.type === 'truefalse' && (
+                      <div className="space-y-2">
+                        <div className="flex items-center">
+                          <input type="radio" name={`question-${index}`} value="true" className="mr-2" />
+                          <label className="text-gray-700 dark:text-gray-300">True</label>
+                        </div>
+                        <div className="flex items-center">
+                          <input type="radio" name={`question-${index}`} value="false" className="mr-2" />
+                          <label className="text-gray-700 dark:text-gray-300">False</label>
+                        </div>
+                      </div>
+                    )}
+                    {question.type === 'shortanswer' && (
+                      <input
+                        type="text"
+                        placeholder="Your answer"
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setFullscreenQuiz(null)}
+                  className="px-4 py-2 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
+                >
+                  Submit Quiz
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
