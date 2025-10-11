@@ -828,7 +828,10 @@ export default function Subjects() {
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Quiz</h3>
                   <button
-                    onClick={() => setFullscreenQuiz(fullscreenLesson.quizzes[0])} // Assuming one quiz per lesson
+                    onClick={() => {
+                      const allQuestions = fullscreenLesson.quizzes.flatMap(quiz => quiz.questions);
+                      setFullscreenQuiz({ questions: allQuestions });
+                    }}
                     className="px-4 py-2 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
                   >
                     Take Quiz
