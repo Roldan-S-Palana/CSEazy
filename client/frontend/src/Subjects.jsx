@@ -386,16 +386,14 @@ export default function Subjects() {
               </button>
             ))}
           </div>
-          {!isTablet && (
-            <div className="mt-4">
-              <button
-                onClick={() => setShowAddSubject(true)}
-                className="w-full px-4 py-3 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
-              >
-                + Add Subject
-              </button>
-            </div>
-          )}
+          <div className="mt-4">
+            <button
+              onClick={() => setShowAddSubject(true)}
+              className={`w-full ${isTablet ? "px-2 py-2" : "px-4 py-3"} bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors`}
+            >
+              {isTablet ? "+" : "+ Add Subject"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1120,7 +1118,7 @@ export default function Subjects() {
 
       {/* Add Subject Modal */}
       {showAddSubject && (
-        <div className="fixed inset-0 z-[70] bg-black bg-opacity-25 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[70] bg-black/50 flex items-center justify-center p-4">
           <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-md w-full">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
