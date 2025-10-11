@@ -924,7 +924,7 @@ export default function Subjects() {
 
       {/* Bottom Navigation for Mobile */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 bg-theme-100 dark:bg-theme-900 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-theme-100 dark:bg-theme-900 border-t border-gray-200 dark:border-gray-700 flex justify-around py-2 z-50 overflow-x-auto">
           {subjects.map((subj) => (
             <button
               key={subj._id}
