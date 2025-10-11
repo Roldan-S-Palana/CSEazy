@@ -231,7 +231,13 @@ export default function Subjects() {
   const handleSubmitQuiz = () => {
     let correctCount = 0;
     fullscreenQuiz.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === question.answer) {
+      let userAnswer = selectedAnswers[index];
+      let correctAnswer = question.answer;
+      if (question.type === 'truefalse') {
+        // Convert boolean to string if needed
+        correctAnswer = correctAnswer === true ? 'true' : correctAnswer === false ? 'false' : correctAnswer;
+      }
+      if (userAnswer === correctAnswer) {
         correctCount++;
       }
     });
