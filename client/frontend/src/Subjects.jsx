@@ -753,14 +753,46 @@ export default function Subjects() {
                       ))}
                     </div>
                   )}
-                  <input
-                    type="text"
-                    placeholder="Answer"
-                    value={quizAnswer}
-                    onChange={(e) => setQuizAnswer(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
-                    required
-                  />
+                  {quizType === 'truefalse' ? (
+                    <div className="space-y-2">
+                      <label className="block text-gray-700 dark:text-gray-300">Correct Answer:</label>
+                      <div className="flex space-x-4">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="quizAnswer"
+                            value="true"
+                            checked={quizAnswer === 'true'}
+                            onChange={(e) => setQuizAnswer(e.target.value)}
+                            className="mr-2"
+                            required
+                          />
+                          True
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="quizAnswer"
+                            value="false"
+                            checked={quizAnswer === 'false'}
+                            onChange={(e) => setQuizAnswer(e.target.value)}
+                            className="mr-2"
+                            required
+                          />
+                          False
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder="Answer"
+                      value={quizAnswer}
+                      onChange={(e) => setQuizAnswer(e.target.value)}
+                      className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                      required
+                    />
+                  )}
                   <div className="flex space-x-2">
                     <button
                       type="submit"
