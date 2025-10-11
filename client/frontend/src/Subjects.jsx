@@ -929,7 +929,7 @@ export default function Subjects() {
             <button
               key={subj._id}
               onClick={() => setSelectedSubject(subj)}
-              className={`p-2 rounded-lg transition-all duration-300 ${
+              className={`p-2 rounded-lg transition-all duration-300 active:scale-95 ${
                 selectedSubject && selectedSubject._id === subj._id
                   ? "bg-theme-100 dark:bg-theme-900"
                   : "hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -944,7 +944,7 @@ export default function Subjects() {
           ))}
           <button
             onClick={() => setShowAddSubject(true)}
-            className="p-2 rounded-lg bg-theme-500 text-white hover:bg-theme-700 transition-colors"
+            className="p-2 rounded-lg bg-theme-500 text-white hover:bg-theme-700 active:scale-95 transition-colors"
           >
             +
           </button>
