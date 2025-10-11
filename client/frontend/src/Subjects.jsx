@@ -41,6 +41,13 @@ export default function Subjects() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
+  const [showAddSubject, setShowAddSubject] = useState(false);
+  const [subjectName, setSubjectName] = useState("");
+  const [subjectDescription, setSubjectDescription] = useState("");
+  const [subjectIcon, setSubjectIcon] = useState("");
+  const [showAddTopic, setShowAddTopic] = useState(false);
+  const [topicName, setTopicName] = useState("");
+  const [topicDescription, setTopicDescription] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000/api/subjects")
@@ -253,6 +260,51 @@ export default function Subjects() {
     setFullscreenQuiz(null);
   };
 
+  const handleAddSubject = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/subjects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: subjectName, description: subjectDescription, icon: subjectIcon }),
+      });
+      if (response.ok) {
+        setSubjectName("");
+        setSubjectDescription("");
+        setSubjectIcon("");
+        setShowAddSubject(false);
+        // Refresh subjects
+        const res = await fetch("http://localhost:5000/api/subjects");
+        const data = await res.json();
+        setSubjects(data);
+      }
+    } catch (error) {
+      console.error("Error adding subject:", error);
+    }
+  };
+
+  const handleAddTopic = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/topics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: topicName, description: topicDescription, subject: selectedSubject._id }),
+      });
+      if (response.ok) {
+        setTopicName("");
+        setTopicDescription("");
+        setShowAddTopic(false);
+        // Refresh subjects
+        const res = await fetch("http://localhost:5000/api/subjects");
+        const data = await res.json();
+        setSubjects(data);
+      }
+    } catch (error) {
+      console.error("Error adding topic:", error);
+    }
+  };
+
 
   if (loading)
     return (
@@ -334,6 +386,60 @@ export default function Subjects() {
               </button>
             ))}
           </div>
+          {!isTablet && (
+            <div className="mt-4">
+              {!showAddSubject ? (
+                <button
+                  onClick={() => setShowAddSubject(true)}
+                  className="w-full px-4 py-3 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
+                >
+                  + Add Subject
+                </button>
+              ) : (
+                <form onSubmit={handleAddSubject} className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Subject Name"
+                    value={subjectName}
+                    onChange={(e) => setSubjectName(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    required
+                  />
+                  <textarea
+                    placeholder="Subject Description"
+                    value={subjectDescription}
+                    onChange={(e) => setSubjectDescription(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    rows="3"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Icon Path (e.g., /server/icons/subject.png)"
+                    value={subjectIcon}
+                    onChange={(e) => setSubjectIcon(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    required
+                  />
+                  <div className="flex space-x-2">
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    >
+                      Add Subject
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddSubject(false)}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -655,6 +761,53 @@ export default function Subjects() {
                 No lessons available.
               </p>
             )}
+
+            {/* Add Topic */}
+            <div className="mt-6">
+              {!showAddTopic ? (
+                <button
+                  onClick={() => setShowAddTopic(true)}
+                  className="w-full px-4 py-3 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
+                >
+                  + Add Topic
+                </button>
+              ) : (
+                <form onSubmit={handleAddTopic} className="space-y-3">
+                  <h4 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white">Add New Topic</h4>
+                  <input
+                    type="text"
+                    placeholder="Topic Name"
+                    value={topicName}
+                    onChange={(e) => setTopicName(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    required
+                  />
+                  <textarea
+                    placeholder="Topic Description"
+                    value={topicDescription}
+                    onChange={(e) => setTopicDescription(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                    rows="3"
+                    required
+                  />
+                  <div className="flex space-x-2">
+                    <button
+                      type="submit"
+                      className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      Add Topic
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddTopic(false)}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
 
             {/* Add Lesson Form */}
             {showLessonForm === selectedTopic._id && (
