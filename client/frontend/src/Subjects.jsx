@@ -388,56 +388,12 @@ export default function Subjects() {
           </div>
           {!isTablet && (
             <div className="mt-4">
-              {!showAddSubject ? (
-                <button
-                  onClick={() => setShowAddSubject(true)}
-                  className="w-full px-4 py-3 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
-                >
-                  + Add Subject
-                </button>
-              ) : (
-                <form onSubmit={handleAddSubject} className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Subject Name"
-                    value={subjectName}
-                    onChange={(e) => setSubjectName(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
-                    required
-                  />
-                  <textarea
-                    placeholder="Subject Description"
-                    value={subjectDescription}
-                    onChange={(e) => setSubjectDescription(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
-                    rows="3"
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Icon Path (e.g., /server/icons/subject.png)"
-                    value={subjectIcon}
-                    onChange={(e) => setSubjectIcon(e.target.value)}
-                    className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
-                    required
-                  />
-                  <div className="flex space-x-2">
-                    <button
-                      type="submit"
-                      className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                    >
-                      Add Subject
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowAddSubject(false)}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
+              <button
+                onClick={() => setShowAddSubject(true)}
+                className="w-full px-4 py-3 bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors"
+              >
+                + Add Subject
+              </button>
             </div>
           )}
         </div>
@@ -1157,6 +1113,66 @@ export default function Subjects() {
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Subject Modal */}
+      {showAddSubject && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Subject</h2>
+                <button
+                  onClick={() => setShowAddSubject(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+              <form onSubmit={handleAddSubject} className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Subject Name"
+                  value={subjectName}
+                  onChange={(e) => setSubjectName(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                  required
+                />
+                <textarea
+                  placeholder="Subject Description"
+                  value={subjectDescription}
+                  onChange={(e) => setSubjectDescription(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                  rows="3"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Icon Path (e.g., /server/icons/subject.png)"
+                  value={subjectIcon}
+                  onChange={(e) => setSubjectIcon(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-theme-500 focus:ring-2 focus:ring-blue-200 dark:bg-gray-700 dark:text-white transition-all duration-300"
+                  required
+                />
+                <div className="flex space-x-2">
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    Add Subject
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddSubject(false)}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
