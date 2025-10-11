@@ -475,7 +475,7 @@ export default function Subjects() {
                           style={{
                             background:
                               "radial-gradient(circle at 50% 40%, var(--color-theme-500) 60%, var(--color-theme-900) 61%)",
-                            boxShadow: "0 20px 20px -10px var(--color-theme-900)",
+                            boxShadow: "0 30px 40px -10px oklch(from var(--color-theme-900) calc(l * 1) calc(c * 1) calc(h * 1) / 0.5)",
                             textShadow:
                               "1px 1px 2px rgba(0,0,0,0.7), -1px -1px 2px rgba(255,255,255,0.3)",
                             perspective: "200px",
