@@ -1124,8 +1124,8 @@ export default function Subjects() {
 
       {/* Add Subject Modal */}
       {showAddSubject && (
-        <div className="fixed inset-0 z-[70] bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-md w-full">
+        <div className="fixed inset-0 z-[70] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowAddSubject(false)}>
+          <div className="bg-theme-100 dark:bg-theme-900 rounded-lg shadow-xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Add New Subject</h2>
