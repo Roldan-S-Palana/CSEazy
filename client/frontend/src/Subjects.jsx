@@ -389,9 +389,9 @@ export default function Subjects() {
           <div className="mt-4">
             <button
               onClick={() => setShowAddSubject(true)}
-              className={`w-full ${isTablet ? "px-2 py-2" : "px-4 py-3"} bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors`}
+              className={`w-full ${isTablet || isMobile ? "px-2 py-2" : "px-4 py-3"} bg-theme-500 text-white rounded-lg hover:bg-theme-700 transition-colors`}
             >
-              {isTablet ? "+" : "+ Add Subject"}
+              {isTablet || isMobile ? "+" : "+ Add Subject"}
             </button>
           </div>
         </div>
