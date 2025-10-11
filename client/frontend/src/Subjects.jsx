@@ -324,10 +324,10 @@ export default function Subjects() {
 
       {/* Left Navigation - Subjects */}
       <div
-        className={`fixed left-0 h-full bg-theme-100 dark:bg-theme-900 border-r border-gray-200 dark:border-gray-700 
-             ${
-               isMobile ? (isMobileMenuOpen ? "block" : "hidden") : "block"
-             } z-[60]`}
+        className={`fixed left-0 h-full bg-theme-100 dark:bg-theme-900 border-r border-gray-200 dark:border-gray-700 overflow-y-auto
+              ${
+                isMobile ? (isMobileMenuOpen ? "block" : "hidden") : "block"
+              } z-[60]`}
         style={{ width: isTablet ? "80px" : "320px" }}
       >
         <div className="p-4">
