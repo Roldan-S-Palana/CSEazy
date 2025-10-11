@@ -348,9 +348,7 @@ export default function Subjects() {
                   isTablet ? "py-2" : "text-left px-4 py-3"
                 } rounded-lg transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-700 ${
                   selectedSubject && selectedSubject._id === subj._id
-                    ? isTablet
-                      ? "bg-theme-100 dark:bg-theme-900"
-                      : "bg-theme-100 dark:bg-theme-900 border-l-4 border-theme-500"
+                    ? "bg-theme-100 dark:bg-theme-900 border-l-4 border-theme-500"
                     : ""
                 }`}
               >
