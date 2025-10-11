@@ -942,6 +942,12 @@ export default function Subjects() {
               />
             </button>
           ))}
+          <button
+            onClick={() => setShowAddSubject(true)}
+            className="p-2 rounded-lg bg-theme-500 text-white hover:bg-theme-700 transition-colors"
+          >
+            +
+          </button>
         </div>
       )}
 
