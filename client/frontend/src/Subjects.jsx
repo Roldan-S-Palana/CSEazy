@@ -929,7 +929,7 @@ export default function Subjects() {
               onClick={() => setSelectedSubject(subj)}
               className={`p-2 rounded-lg transition-all duration-300 active:scale-95 ${
                 selectedSubject && selectedSubject._id === subj._id
-                  ? "bg-theme-100 dark:bg-theme-900"
+                  ? "bg-theme-100 dark:bg-theme-900 border-2 border-theme-500"
                   : "hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
